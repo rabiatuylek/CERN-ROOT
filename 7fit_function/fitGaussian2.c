@@ -1,0 +1,50 @@
+void fitGaussian2()
+{
+
+    TH1F *hist = new TH1F("hist", "Histogram", 100, 0, 10);  
+    
+    //Random Generator
+    TRandom2 *rand = new TRandom2(3);
+
+    
+    fstream file;
+    file.open("data2.txt", ios::out);
+    
+    //create gaussian
+    for (int i=0; i <1000; i++)
+    {
+        double r;
+        r= rand->Gaus(5,1);
+        file <<r << endl;
+        
+    }
+        
+    file.close();
+    file.open("data2.txt", ios::in);
+    
+    double value;
+    
+    //create histogram
+    while(1)
+    {
+        file >> value;
+        
+        hist->Fill(value);
+        if(file.eof()) break;
+        
+    
+    }
+
+    hist->GetXaxis()->SetTitle("Distribution");  
+    hist->GetYaxis()->SetTitle("Entries");
+    
+    //TF1 *fit = new TF1("fit", "gaus", 0,10);  //from 0 to 10 at x axis
+    TF1 *fit = new TF1("fit", "gaus", 4,6);  
+    
+    TCanvas *c1 = new TCanvas();
+    hist->Draw();     // create Hist
+    
+    hist->Fit("fit", "R");  //Fit & Line of X axis is changed by R
+    // We can write gaussian distribution that we want >>> R
+
+}
